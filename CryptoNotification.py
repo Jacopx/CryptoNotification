@@ -21,7 +21,9 @@ except getopt.GetoptError:
       sys.exit(2)
 for arg in args:
     if arg == '-d' :
-        data = json.load(urllib.request.urlopen("https://api.coinmarketcap.com/v1/ticker/bitcoin/?convert=EUR"))
+        response = urllib.request.urlopen("https://api.coinmarketcap.com/v1/ticker/bitcoin/?convert=EUR")
+        data = json.loads(response.read().decode('utf8'))
+
         price_eur = float(data[0]['price_eur'])
 
         c.execute('SELECT * FROM Trans;')
@@ -45,6 +47,7 @@ for arg in args:
         conn.commit()
 
     elif arg == '-u':
-        data = json.load(urllib.request.urlopen("https://api.coinmarketcap.com/v1/ticker/bitcoin/?convert=EUR"))
+        response = urllib.request.urlopen("https://api.coinmarketcap.com/v1/ticker/bitcoin/?convert=EUR")
+        data = json.loads(response.read().decode('utf8'))
         c.execute("INSERT INTO History(TimeStamp, Type, Price) VALUES (?,?,?);", (str(datetime.datetime.now()), data[0]['symbol'], float(data[0]['price_eur'])))
         conn.commit()
