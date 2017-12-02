@@ -11,7 +11,7 @@ import datetime
 
 x = PrettyTable(["Crypto", "Date", "Amount", "Price", "Value", "Difference"])
 
-conn = sqlite3.connect('wallet.db')
+conn = sqlite3.connect('active.db')
 c = conn.cursor()
 
 try:
