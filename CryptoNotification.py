@@ -5,14 +5,14 @@ import json
 from pprint import pprint
 from prettytable import PrettyTable
 import sqlite3
-import sys
+import sys, os
 import getopt
 import datetime
 
 x = PrettyTable(["Crypto", "Date", "Amount", "Price", "Value", "Difference"])
 y = PrettyTable(["Date", "Crypto", "Value"])
 
-conn = sqlite3.connect('active.db')
+conn = sqlite3.connect(os.path.dirname(os.path.abspath(__file__)) + '/active.db')
 c = conn.cursor()
 
 try:
