@@ -10,6 +10,7 @@ import getopt
 import datetime
 
 x = PrettyTable(["Crypto", "Date", "Amount", "Price", "Value", "Difference"])
+y = PrettyTable(["Date", "Crypto", "Value"])
 
 conn = sqlite3.connect('active.db')
 c = conn.cursor()
@@ -17,10 +18,10 @@ c = conn.cursor()
 try:
       opts, args = getopt.getopt(sys.argv, "dua")
 except getopt.GetoptError:
-      print('Usage: -d Display wallet, -u Update DB or -a Add buy')
+      print('Usage: -d Display wallet, -u Update DB, -l Log of market or -a Add buy')
       sys.exit(2)
 for arg in args:
-    if arg == '-d' :
+    if arg == '-d':
         response = urllib.request.urlopen("https://api.coinmarketcap.com/v1/ticker/bitcoin/?convert=EUR")
         data = json.loads(response.read().decode('utf8'))
 
@@ -51,3 +52,11 @@ for arg in args:
         data = json.loads(response.read().decode('utf8'))
         c.execute("INSERT INTO History(TimeStamp, Type, Price) VALUES (?,?,?);", (str(datetime.datetime.now()), data[0]['symbol'], float(data[0]['price_eur'])))
         conn.commit()
+
+    elif arg == '-l':
+        c.execute('SELECT * FROM History;')
+        all_rows = c.fetchall()
+        for row in all_rows:
+            y.add_row([row[0], row[1], row[2]])
+
+        print(y)
