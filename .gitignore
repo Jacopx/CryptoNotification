@@ -1,5 +1,5 @@
 # Personal
-*.db
+active.db
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
