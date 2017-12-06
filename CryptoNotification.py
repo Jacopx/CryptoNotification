@@ -22,6 +22,9 @@ except getopt.GetoptError:
       sys.exit(2)
 for arg in args:
     if arg == '-d':
+        totAct = 0
+        totDiff = 0
+        totAmount = 0
         response = urllib.request.urlopen("https://api.coinmarketcap.com/v1/ticker/bitcoin/?convert=EUR")
         data = json.loads(response.read().decode('utf8'))
 
@@ -34,8 +37,14 @@ for arg in args:
             diff = act - float(row[4])
             date = datetime.datetime.strptime(row[2], "%d%m%y").strftime("%d-%m-%y")
 
+            totAmount += row[3]
+            totAct += act
+            totDiff += diff
+
             x.add_row([row[1], date, row[3], ("%.2f €" % price_eur), ("%.2f €" % act), ("%.2f €" % diff)])
 
+        x.add_row(["---","------", "----------", "------", "------", "------" ])
+        x.add_row(["TOTAL", "", totAmount, "", ("%.2f €" % totAct), ("%.2f €" % totDiff)])
         print(x)
 
     elif arg == '-a':
