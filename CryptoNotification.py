@@ -16,7 +16,7 @@ conn = sqlite3.connect(os.path.dirname(os.path.abspath(__file__)) + '/active.db'
 c = conn.cursor()
 
 try:
-      opts, args = getopt.getopt(sys.argv, "dua")
+      opts, args = getopt.getopt(sys.argv, "dualp")
 except getopt.GetoptError:
       print('Usage: -d Display wallet, -u Update DB, -l Log of market or -a Add buy')
       sys.exit(2)
@@ -46,6 +46,11 @@ for arg in args:
         x.add_row(["---","------", "----------", "------", "------", "------" ])
         x.add_row(["TOTAL", "", totAmount, "", ("%.2f €" % totAct), ("%.2f €" % totDiff)])
         print(x)
+    elif arg == '-p':
+        response = urllib.request.urlopen("https://api.coinmarketcap.com/v1/ticker/bitcoin/?convert=EUR")
+        data = json.loads(response.read().decode('utf8'))
+        y.add_row([str(datetime.datetime.now()), data[0]['symbol'], float(data[0]['price_eur'])])
+        print(y)
 
     elif arg == '-a':
         sym = input("Insert symbol of Crypto: ")
